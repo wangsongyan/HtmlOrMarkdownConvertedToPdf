@@ -1,5 +1,7 @@
 const request = require("request");
-const pup = require("puppeteer")
+const pup = require("puppeteer");
+const ora = require('ora');
+const spinner = ora();
 
 const parseBody = (url) => {
   return new Promise((resolve, reject) => {
@@ -42,9 +44,72 @@ const toDoubleDimensionalArray = (arr,count) => {
     return doubleDimensionalArray
 }
 
+const renderTempFile  = async (url, options) => {
+	const browser = await pup.launch({
+		headless: true,
+		/*
+			Allow running with no sandbox
+			See: https://github.com/danburzo/percollate/issues/26
+		 */
+		args: options.sandbox
+			? undefined
+			: ['--no-sandbox', '--disable-setuid-sandbox'],
+		defaultViewport: {
+			// Emulate retina display (@2x)...
+			deviceScaleFactor: 2,
+			// ...but then we need to provide the other
+			// viewport parameters as well
+			width: 1920,
+			height: 1080
+		}
+	});
+	const page = await browser.newPage();
+
+	/*
+		Increase the navigation timeout to 2 minutes
+		See: https://github.com/danburzo/percollate/issues/80
+	 */
+	page.setDefaultNavigationTimeout(120 * 1000);
+
+	if (options.debug) {
+		page.on('response', response => {
+			spinner.succeed(`Fetched: ${response.url()}`);
+		});
+	}
+
+	await page.goto(url, { waitUntil: 'load' });
+
+	/*
+		When no output path is present,
+		produce the file name from the web page title
+		(if a single page was sent as argument), 
+		or a timestamped file (for the moment) 
+		in case we're bundling many web pages.
+	 */
+	const output_path =
+		options.output || `percollate-${Date.now()}.pdf`;
+
+  //console.log(header.body.innerHTML);
+  const commonTemplate = `<span></span>`;
+
+	await page.pdf({
+		path: output_path,
+		preferCSSPageSize: true,
+		displayHeaderFooter: true,
+		headerTemplate: commonTemplate,
+		footerTemplate: commonTemplate,
+		printBackground: true
+	});
+
+	await browser.close();
+
+	spinner.succeed(`Saved PDF: ${output_path}`);
+}
+
 module.exports = {
   parseBody,
   parseBodyPup,
   delay,
-  toDoubleDimensionalArray
+  toDoubleDimensionalArray,
+  renderTempFile
 };

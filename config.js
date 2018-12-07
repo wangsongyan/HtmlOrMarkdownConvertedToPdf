@@ -205,6 +205,29 @@ const  liaoXueFengJs = {
   }
 }
 
+// 码洞 老钱 快学Go语言
+const quickLearnGolang = {
+  urlSize: 12,
+  pageApi: "https://mp.weixin.qq.com/s/3Cy7dZordk6NbxYCBFSOeg",
+  name: "快学Go语言.pdf",
+  wrapEle: ".rich_media_content a",
+  css: baseOpt.cssIReader,
+  getUrlList(body, ele, urlSize){
+    let urlList = [];
+    $(body)
+      .find(ele)
+      .each((i,v) => {
+        if(i < urlSize){
+          const path = $(v).attr("href");
+          if(path){
+            urlList.push(path);
+          }
+        }
+      });
+    return urlList.reverse();
+  }
+}
+
 module.exports = {
   javaScriptCourse,
   es6Course,
@@ -216,5 +239,6 @@ module.exports = {
   interviewReview,
   computerGeneral,
   layoutExample,
-  liaoXueFengJs
+  liaoXueFengJs,
+  quickLearnGolang
 };

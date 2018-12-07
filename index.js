@@ -15,7 +15,8 @@ const utils = require("./util"),
     interviewReview,
     computerGeneral,
     layoutExample,
-    liaoXueFengJs
+    liaoXueFengJs,
+    quickLearnGolang
   } = require("./config");
 
 const getHtml = (url,usePup) => {
@@ -203,6 +204,29 @@ const getLiaoXueFengJs =  () => {
   });
 }
 
+const getQuickLearnGolang = () => {
+  const{urlSize, pageApi, name, wrapEle, css, getUrlList} = quickLearnGolang;
+
+  getHtml(pageApi).then(res => {
+    const urlList = getUrlList(res, wrapEle, urlSize);
+    percollate.configure();
+    percollate.pdf(urlList, {
+      output: name,
+      css,
+      decompress: false,
+      toc:true
+    });
+  })
+}
+
+const getExample = () => {
+  const urlList = ['http://example.com'];
+  percollate.configure();
+  percollate.pdf(urlList, {
+    output: 'example.pdf'
+  });
+}
+
 const getPdf = {
   0:getJSCourse,          // 阮一峰JS教程
   1:getEs6Course,         // 阮一峰ES6教程
@@ -214,7 +238,13 @@ const getPdf = {
   7:getComputerGeneral,   // 计算机通识
   8:getLayoutExample,     // 各种常见布局实现和案例分析
   9:getLiaoXueFengJs,     // 廖雪峰JavaScript全栈教程
+  10:getQuickLearnGolang, // 快学Go语言
+  11:getExample, // example
 }
 
+utils.renderTempFile(`file://C:/Users/songy/AppData/Local/Temp/tmp-1121237X1IrKnkH4R.html`,{
+  output: '1.pdf'
+});
+
 // 获取pdf
-getPdf[9]()
+// getPdf[11]()
