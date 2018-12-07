@@ -49,6 +49,10 @@ let content
 		}
 ```
 如果网页内容是动态生成的，设置usePup为true即可
+
+### 修改puppeteer
+[点击查看代码](https://github.com/danburzo/percollate/pull/91/commits/916934009050317502f3dd91ebf50338a03b9da8)
+
 ### 依赖模块
 
 - [cheerio](https://www.npmjs.com/package/cheerio)
