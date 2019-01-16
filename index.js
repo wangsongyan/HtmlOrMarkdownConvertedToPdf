@@ -205,10 +205,10 @@ const getLiaoXueFengJs =  () => {
 }
 
 const getQuickLearnGolang = () => {
-  const{urlSize, pageApi, name, wrapEle, css, getUrlList} = quickLearnGolang;
+  const{urlSize, start, pageApi, name, wrapEle, css, getUrlList} = quickLearnGolang;
 
   getHtml(pageApi).then(res => {
-    const urlList = getUrlList(res, wrapEle, urlSize);
+    const urlList = getUrlList(res, wrapEle, urlSize, start);
     percollate.configure();
     percollate.pdf(urlList, {
       output: name,
@@ -242,9 +242,9 @@ const getPdf = {
   11:getExample, // example
 }
 
-utils.renderTempFile(`file://C:/Users/songy/AppData/Local/Temp/tmp-1121237X1IrKnkH4R.html`,{
-  output: '1.pdf'
+utils.renderTempFile(`file://C:/Users/songy/AppData/Local/Temp/tmp-13104KUJR8UcH9EP1.html`,{
+  output: '快学Go语言.pdf'
 });
 
 // 获取pdf
-// getPdf[11]()
+//getPdf[10]()
